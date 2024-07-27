@@ -3,9 +3,6 @@ import {TextField,Button,FormControl,InputLabel,MenuItem,Select} from "@mui/mate
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
-
-
-
 function SignIn(){
     const[regname,setRegName] = useState("");
     const[reggender,setRegGender] = useState("");
@@ -16,7 +13,6 @@ function SignIn(){
     const[regcmpass,setRegcmPass] = useState("");
     const[message,setMessage] = useState("")
      
-
     const navigate = useNavigate()
 
     async function handleRegSubmit(e){
@@ -28,7 +24,8 @@ function SignIn(){
                 mobile:regmobile,
                 email:regemail,
                 address:regadd,
-                password:regnewpass
+                password:regnewpass,
+                active:true
             };
             try{
                 const response = await axios.post("http://localhost:3000/signup",userData);
@@ -37,12 +34,9 @@ function SignIn(){
                     setTimeout(()=>{
                         navigate('/login');
                     },2000)
-
-                   
                 }
             }catch(error){
-                setMessage("There was an error registering");
-               
+                setMessage("There was an error registering");  
             }
         }else{
             setMessage("Password mismatch");

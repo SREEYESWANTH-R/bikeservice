@@ -1,0 +1,101 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+.admin-dash-container {
+    display:grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 260px 1fr;
+    grid-template-areas: 
+        "header header"
+        "navigation content";
+    height: 100vh;
+}
+
+.admin-dash-header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    background-color: #1b1b1b;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Montserrat ,sans-serif;
+    border-bottom: 1px solid white;
+}
+
+.admin-header-profile {
+    display: flex;
+    gap:5px;
+    align-items: center;
+}
+
+.admin-navigation {
+    grid-area: navigation;
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+}
+
+.admin-navigation ul {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: Roboto,Montserrat ,sans-serif;
+}
+
+.admin-navigation li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.admin-navigation li:hover {
+    color: #ff6161;
+}
+
+.admin-logbtn {
+    margin-top: auto;
+}
+
+.admin-dash-content {
+    grid-area: content;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-dash-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.admin-card {
+    flex: 1;
+}
+
+.admin-card-ele{
+    display: flex;
+    justify-content: space-between;
+    font-family:Montserrat,sans-serif;
+}
+
+.admin-dash-graphs {
+    display: flex;
+    gap: 20px;
+}
+
+.admin-graph-card {
+    flex: 1;
+}

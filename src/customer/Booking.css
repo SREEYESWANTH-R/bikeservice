@@ -6,7 +6,7 @@
     text-decoration: none;
 }
 
-.dash-container{
+.book-container{
     display:grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 260px 1fr;
@@ -16,7 +16,7 @@
     height: 100vh;
 }
 
-.dash-header {
+.book-header {
     grid-area: header;
     display: flex;
     justify-content: space-between;
@@ -29,13 +29,13 @@
     border-bottom: 1px solid white;
   }
 
-  .header-profile{
+  .bookhead-profile{
     display: flex;
     gap:5px;
     align-items: center;
   }
 
-.navigation{
+.book-navigation{
     grid-area: navigation;
     display: flex;
     flex-direction: column;
@@ -47,35 +47,24 @@
     font-family: Montserrat ,sans-serif;
 }
 
-.navigation ul {
+.book-navigation ul {
     list-style-type: none;
     padding: 0;
     margin:0;
   }
   
-.navigation li {
+.book-navigation li {
     display: flex;
     align-items: center;
     padding: 13px ;
     cursor: pointer;
 }
   
-.navigation li:hover {
+.book-navigation li:hover {
     background-color: #ff5353;
     border-radius: 15px;
 }
-  
-.dash-content {
+
+.book-content{
     grid-area: content;
-    margin-top: auto;
-    padding: 20px;
-    overflow-y: auto;
-}
-
-.dash-content Button{
-    transition: all;
-}
-
-.dash-content Button:hover{
-    background-color: darkred;
 }

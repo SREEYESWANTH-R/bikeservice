@@ -13,14 +13,18 @@ function Login(){
   const[logmsg,setLogMsg] = useState("");
    
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
 
   async function handleLogin(e){
    e.preventDefault();
    try{
     const response = await axios.post("http://localhost:3000/login",{identifer,logpass});
     if(response.status === 200){
+        const {token,name,userId} = response.data
         setLogMsg("Login in Successfully");
-        localStorage.setItem("token",response.data.token)
+        localStorage.setItem("token",token);
+        localStorage.setItem("name",name);
+        localStorage.setItem("userId",userId);
         navigate("/dashboard")
         
     }
