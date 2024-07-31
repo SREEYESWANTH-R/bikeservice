@@ -91,10 +91,13 @@ function Booking(){
     </header>
     <nav className='book-navigation'>
       <ul>
-        <li>
-          <AccountCircle style={{ marginRight: '8px' }} />
-          Profile
-        </li>
+        <Link to="/dashboard" style={{color:"white"}}>
+          <li>
+            <AccountCircle style={{ marginRight: '8px' }} />
+            Profile
+          </li>
+        </Link>
+       
         <Link style={{ color: "white" }} to='/dashboard/booking'>
           <li>
             <MiscellaneousServices style={{ marginRight: '8px' }} />
@@ -120,6 +123,7 @@ function Booking(){
             label="Bike Number"
             variant="outlined"
             onChange={e => { setBikeNum(e.target.value); }}
+            style={{marginBottom:"1em"}}
           />
           <TextField
             fullWidth
@@ -129,6 +133,7 @@ function Booking(){
             label="address"
             variant="outlined"
             onChange={e => { setAddress(e.target.value); }}
+            style={{marginBottom:"1em"}}
           />
           <TextField
             fullWidth
@@ -138,12 +143,14 @@ function Booking(){
             label="Phone Number"
             variant="outlined"
             onChange={e => { setPhoneNum(e.target.value); }}
+            style={{marginBottom:"1em"}}
           />
-           <FormControl fullWidth variant="outlined" margin="normal">
+           <FormControl fullWidth variant="outlined" margin="normal" style={{marginBottom:"1em",maxWidth:"100%"}}>
               <InputLabel id="services-label">Services</InputLabel>
               <Select
                 labelId="services-label"
                 id="service-select"
+                style={{minWidth:"80%"}}
                 multiple
                 value={selectedServices}
                 label="Services"
@@ -151,7 +158,7 @@ function Booking(){
                 renderValue={(selected) => selected.join(', ')}
               >
                 {services.map(service => (
-                  <MenuItem key={service.service_id} value={service.service_name}>
+                  <MenuItem key={service.service_id} value={service.service_name} style={{minWidth:"80%"}}>
                     {service.service_name}
                   </MenuItem>
                 ))}
@@ -165,6 +172,7 @@ function Booking(){
               value={date}
               variant="outlined"
               onChange={e => { setDate(e.target.value); }}
+              style={{marginBottom:"1em"}}
             />
           <Button size="medium" variant="contained" type="submit" style={{backgroundColor:"red", width:"10em"}}>Book</Button>
         </form>

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {TextField,Button,FormControl,InputLabel,MenuItem,Select} from "@mui/material"
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import './SignIn.css'
 
 function SignIn(){
     const[regname,setRegName] = useState("");
@@ -45,7 +46,6 @@ function SignIn(){
 
   return (
     <div className='sign-container'>
-
         <h2>Gear Up for Great Service – Sign Up Now!</h2>
         <p>Create your account to book services, track your bike’s status, and receive timely updates. It’s quick and easy!</p>
         <form type="submit" onSubmit={handleRegSubmit}>
@@ -57,8 +57,9 @@ function SignIn(){
                 label="Name" 
                 variant="outlined"
                 onChange={e=>{setRegName(e.target.value)}}
+                style={{marginBottom:"10px"}}
             />
-            <FormControl fullWidth>
+            <FormControl fullWidth  style={{marginBottom:"10px"}}>
                 <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -80,6 +81,7 @@ function SignIn(){
                 label="Mobile" 
                 variant="outlined"
                 onChange={e=>{setRegMobile(e.target.value)}}
+                style={{marginBottom:"10px"}}
             />
             <TextField
                 fullWidth
@@ -89,6 +91,7 @@ function SignIn(){
                 label="Email" 
                 variant="outlined"
                 onChange={e=>{setRegEmail(e.target.value)}}
+                style={{marginBottom:"10px"}}
             />
             <TextField
                 fullWidth
@@ -98,6 +101,7 @@ function SignIn(){
                 multiline
                 rows={4}
                 onChange={e=>{setRegAdd(e.target.value)}}
+                style={{marginBottom:"10px"}}
             />
             <TextField
                 fullWidth
@@ -108,6 +112,7 @@ function SignIn(){
                 variant="outlined"
                 type="password"
                 onChange={e=>{setRegNewPass(e.target.value)}}
+                style={{marginBottom:"10px"}}
             />
             <TextField
                 fullWidth
@@ -118,8 +123,9 @@ function SignIn(){
                 variant="outlined"
                 type="password"
                 onChange={e=>{setRegcmPass(e.target.value)}}
+                style={{marginBottom:"10px"}}
             />
-            <Button size="small" variant="contained" style={{backgroundColor:"red"}} type='submit'> Sign Up</Button>
+            <Button size="small" variant="contained" style={{backgroundColor:"red",marginBottom:"10px"}} type='submit'> Sign Up</Button>
         </form>    
         <p id="reg-p">{message}</p>
         <div className='sign-foot'>

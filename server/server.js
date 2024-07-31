@@ -5,14 +5,18 @@ const multer  = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+const dotenv = require("dotenv");
+const { count } = require("console");
+
+dotenv.config();
 
 //app setup
 const app = express();
 
 app.use(cors({
     origin:["http://localhost:3001"],
-    methods:['POST','GET'],
+    methods:['POST','GET','DELETE'],
     credentials : true
 }));
 app.use(express.json());
@@ -24,7 +28,7 @@ const db = mysql2.createConnection(
         host:"localhost",
         user:"root",
         password:"root",
-        database:"bikeInfo"
+        database:"bikeinfo"
     }
 )
 
@@ -35,6 +39,22 @@ db.connect((err)=>{
     }
     console.log("MySOL Connected..");
 })
+
+// Middleware to authenticate token and extract user info
+// const authenticateToken = (req, res, next) => {
+//     const authHeader = req.headers['authorization'];
+//     const token = authHeader && authHeader.split(' ')[1];
+  
+//     if (token == null) return res.sendStatus(401);
+  
+//     jwt.verify(token, 'your_jwt_secret', (err, user) => {
+//       if (err) return res.sendStatus(403);
+//       req.user = user;
+//       next();
+//     });
+//   };
+  
+
 
 //route for user signup
 app.post("/signup",async(req,res)=>{
@@ -103,12 +123,11 @@ app.get("/admin/dashboard",(req,res)=>{
     db.query(sql,(err,result)=>{
         if(err){
             console.error("Error fetching Conut",err);
-            return res.status(500).json({error:"Error fetching appoinment details"});
+            res.status(500).json({error:"Error fetching appoinment details"});
         }
         res.status(200).json({message:"successful", totalUsers:result[0].totalUsers,activeUser:result[0].activeUser});
     })
 })
-
 
 app.post('/logout',(req,res)=>{
     const {id} = req.body;
@@ -128,7 +147,46 @@ app.get("/services",(req,res)=>{
     })
 })
 
-//route for handling booking
+//route to add new services 
+app.post('/services/add',(req,res)=>{
+    const {newService,newServicerate} = req.body;
+    const insertSQL = "INSERT INTO Services (service_name,service_rate) VALUES (?,?)";
+    db.query(insertSQL,[newService,newServicerate],(err,result)=>{
+        if(err) return res.status(500).json({Error:"Error updating new services"});
+        res.sendStatus(200).json(result);
+    });
+});
+
+app.delete('/services/delete', (req, res) => {
+    const { serviceName} = req.body;
+
+    // Query to find the service_id by service_name
+    const getServiceIdQuery = "SELECT service_id FROM Services WHERE service_name = ?";
+    db.query(getServiceIdQuery, [serviceName], (err, result) => {
+        if (err) {
+            console.error('Error fetching service ID:', err);
+             res.status(500).json({ error: 'Error fetching service ID' });
+        }
+        if (result.length === 0) {
+            res.status(404).json({ message: 'Service not found' });
+        }
+        const serviceId = result[0].service_id;
+
+        // Query to delete the service by service_id
+        const deleteServiceQuery = "DELETE FROM Services WHERE service_id = ?";
+        db.query(deleteServiceQuery, [serviceId], (err) => {
+            if (err) {
+                console.error('Error deleting service:', err);
+                return res.status(500).json({ error: 'Error deleting service' });
+            }
+            res.status(200).json({ message: 'Service deleted successfully' });
+        });
+    });
+});
+
+
+
+//route for booking
 app.post("/bookings",(req,res)=>{
     const { userName,address,bikeNum,phoneNum,date,selectedServices,totalCost,status} = req.body
 
@@ -156,7 +214,6 @@ app.post("/bookings",(req,res)=>{
                     (err)=>{
                         if(err){
                             console.error("Error inserting booking services:",err);
-    
                         }
                     });
                 }
@@ -166,22 +223,114 @@ app.post("/bookings",(req,res)=>{
     })
 })
 
+
+//route to get the booking          
+app.get("/bookings", (req, res) => {
+    const bookSql = `
+        SELECT 
+            B.booking_id, B.user_name, B.address, B.bike_num, B.phone_num, B.booking_date, B.total_cost, B.status,
+            GROUP_CONCAT(S.service_name SEPARATOR ', ') AS services,
+            SUM(BS.total_cost) AS service_total_cost
+        FROM 
+            Bookings B
+        LEFT JOIN 
+            BookingServices BS ON B.booking_id = BS.booking_id
+        LEFT JOIN
+            Services S ON BS.service_id = S.service_id
+        GROUP BY 
+            B.booking_id
+        ORDER BY 
+            B.booking_id
+    `;
+
+    db.query(bookSql, (err, results) => {
+        if (err) {
+            console.error('Error fetching bookings:', err);
+            res.status(500).send('Error fetching bookings');
+        }
+
+        res.send(results);
+    });
+});
+
+
+//route to count the booking active and completed details
+
+app.get('/booking/status',(req,res)=>{
+    const sql = `
+    SELECT
+            (SELECT COUNT(*) FROM Bookings WHERE status = 'pending') AS pendingBooking,
+            (SELECT COUNT(*) FROM Bookings WHERE status = 'completed') AS CompleteBook
+    `
+
+    db.query(sql,(err,countres)=>{
+        if(err) {res.status(404).json("Error sending count");}
+        else{
+           
+            res.status(200).json({message:"Count Sent Successfully",pendingBook:countres[0].pendingBooking,comBooking:countres[0].completeBooking});
+        }
+    })
+});
+
+
+//route get the details of booking of the user 
+app.get('/customer/bookings/:username', (req, res) => {
+    const username = req.params.username;
+    const query = `
+        SELECT 
+            B.booking_id, 
+            B.user_name, 
+            B.address, 
+            B.bike_num, 
+            B.phone_num, 
+            B.booking_date, 
+            B.total_cost, 
+            B.status,
+            GROUP_CONCAT(BS.service_name SEPARATOR ', ') AS services,
+            SUM(BS.total_cost) AS service_total_cost
+        FROM 
+            Bookings B
+        INNER JOIN 
+            BookingServices BS ON B.booking_id = BS.booking_id
+        WHERE 
+            B.user_name = ?
+        GROUP BY 
+            B.booking_id
+        ORDER BY 
+            B.booking_id
+    `;
+
+    db.query(query, [username], (err, results) => {
+        if (err) {
+            console.error('Error fetching bookings:', err);
+            res.status(500).send('Error fetching bookings');
+        }
+        if (results.length === 0) {
+             res.status(404).send(`No bookings found for username: ${username}`);
+        }
+        res.json(results);
+    });
+});
+
+
+
+
 //route for notifying admin
 app.post('/notify-admin',(req,res)=>{
     const{userName,address,bikeNum,phoneNum,date,selectedServices,totalCost} = req.body;
 
     //setting up node mailer
     const transporter = nodemailer.createTransport({
-        service:'Gmail',
+        service:'gmail',
         auth:{
-            user:'sololeveling24',
-            pass:'solo@123'
+            user:'sreeyeswanthr@gmail.com', //your mail
+            pass:'tqpb lden jcwh uigf' //your 2 step verification -> app password
         }
     });
      // Email options
     const mailOptions = {
-    from: 'sololeveling24',
-    to: 'sreeyeswanthr@gmail.com',
+    from: 'sreeyeswanthr@gmail.com',
+    to: 'sololevelingrise24@gmail.com',
     subject: 'New Booking Received',
     text: `New booking details:
     \nUser Name: ${userName}

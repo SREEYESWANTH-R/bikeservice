@@ -19,6 +19,7 @@
     "cookieparser": "^0.1.0",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
@@ -32,6 +33,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
+    "recharts": "^2.12.7",
     "web-vitals": "^2.1.4",
     "ws": "^8.18.0"
   },

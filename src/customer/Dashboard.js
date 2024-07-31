@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import './Dashboard.css'
-import {Button} from '@mui/material'
+import {Button,Typography, Card, CardContent} from '@mui/material'
 import {MiscellaneousServices,Task,AccountCircle, Person} from '@mui/icons-material';
 import {jwtDecode} from "jwt-decode"
 import { useNavigate ,Link} from 'react-router-dom';
@@ -12,6 +12,9 @@ function Dashboard(){
   const navigate = useNavigate();
   const [userName,setUserName] = useState("");
   const[userId ,setUserID] = useState(null);
+  const [bookings,setBookings] = useState([]);
+
+  
 
   useEffect(()=>{
     const token = localStorage.getItem("token");
@@ -22,6 +25,7 @@ function Dashboard(){
             const decodeToken = jwtDecode(token);
             setUserName(decodeToken.name);
             setUserID(decodeToken.id)
+            fetchBookings(decodeToken.name);
         }catch(error){
             console.error("JWT Decode Error:", error);
             localStorage.removeItem("token");
@@ -31,6 +35,18 @@ function Dashboard(){
 
   },[navigate]);
 
+  const fetchBookings = async (username) => {
+    try {
+        const encodedUsername = encodeURIComponent(username);
+      
+        const response = await axios.get(`http://localhost:3000/customer/bookings/${encodedUsername}`);
+       
+        setBookings(response.data);
+    } catch (error) {
+        console.error('Error fetching customer bookings:', error);
+    }
+};
+  
   const handleLogout = async() =>{
     try{
         axios.post("http://localhost:3000/logout",{id:userId})
@@ -72,7 +88,35 @@ function Dashboard(){
             <Button size="medium" onClick={handleLogout} variant="contained" style={{backgroundColor:"red", width:"10em"}}>Logout</Button>
         </div>
       </nav>
-      <div className='dash-content'></div>
+      <div className='dash-content'>
+        <div className='dash-bookings'>
+            <h2>Bookings</h2>
+            <div className='admin-card-box'>
+            {bookings.length > 0 ? (
+              bookings.map((booking) => (
+                <Card key={booking.booking_id} className='admin-card'>
+                  <CardContent className="booking-details">
+                    <div className='status-cont'>
+                      <Typography variant="h6">Booking ID: {booking.booking_id}</Typography>
+                      <Typography variant="body1"><strong>{booking.status}</strong></Typography>
+                    </div>
+                    <Typography variant="body1"><strong>User:</strong> {booking.user_name}</Typography>
+                    <Typography variant="body1"><strong>Address:</strong> {booking.address}</Typography>
+                    <Typography variant="body1"><strong>Bike Number:</strong> {booking.bike_num}</Typography>
+                    <Typography variant="body1"><strong>Phone Number:</strong> {booking.phone_num}</Typography>
+                    <Typography variant="body1"><strong>Date:</strong> {booking.booking_date}</Typography>
+                    <Typography variant="body1"><strong>Services:</strong> {booking.services}</Typography>
+                    <Typography variant="body1"><strong>Total Cost:</strong> {booking.total_cost}</Typography>
+                    
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Typography variant="body1">No bookings available</Typography>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

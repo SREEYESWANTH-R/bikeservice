@@ -67,4 +67,35 @@
 
 .book-content{
     grid-area: content;
+    justify-self: center;
 }
+
+.book-content h1{
+    text-align: center;
+    font-family: Montserrat ,sans-serif;
+    margin: 10px 0;
+    color: #333;
+}
+
+.bookin-section{
+    margin-top: 20px;
+    text-align: center;
+    font-family: Montserrat ,sans-serif;
+}
+
+.bookin-section form{
+    margin-top: 20px;
+} 
+
+/* .MuiFormControl-root {
+    max-width: 500px; }
+  
+.MuiSelect-root {
+   
+    min-width: 300px;
+}
+  
+.MuiInputBase-root {
+   
+    overflow: auto;
+} */

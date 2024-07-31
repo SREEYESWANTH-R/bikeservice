@@ -1,0 +1,9 @@
+.sign-container{
+    text-align: center;
+    padding: 0.2em 3em;
+    font-family:  Montserrat ,sans-serif;
+}
+
+.sign-container h2,p{
+    margin: 10px;
+}

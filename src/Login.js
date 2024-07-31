@@ -5,9 +5,10 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
 
+
+
 function Login(){
 
-  
   const[identifer,setIdentifer] = useState("")
   const[logpass,setLogPass] = useState("");
   const[logmsg,setLogMsg] = useState("");
@@ -30,18 +31,22 @@ function Login(){
     }
    }catch(error){
     setLogMsg(error.response ? error.response.data.Error : error.message);
+    setTimeout(()=>{
+      setLogMsg("");
+      setIdentifer("");
+      setLogPass("");
+    },1000)
+    
   }
 }
   return (
     <div className='log-container'>
-      <div className='log-img'></div>
-      <div className='log-section'>
-
+      <div className='log'> 
           <div className='log-head'>
-            <h2>Ready to Ride?</h2>
+            <h2>Ready to <span style={{color:"red"}}>Ride?</span></h2>
             <p>Log in to manage your services and track your bike's progress.</p>
           </div>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} className='bike-login-form'>
               <TextField
                         fullWidth
                         helperText="" 
@@ -50,6 +55,7 @@ function Login(){
                         label="Email/Mobile Number" 
                         variant="outlined"
                         onChange={e=>{setIdentifer(e.target.value)}}
+                        style={{marginBottom:"1em"}}
                     />
               <TextField
                         fullWidth
@@ -60,10 +66,11 @@ function Login(){
                         variant="outlined"
                         type="password"
                         onChange={e=>{setLogPass(e.target.value)}}
+                        style={{marginBottom:"1em"}}
                   />
-              <Button size="small" variant="contained" style={{backgroundColor:"red"}} type='submit'> Login</Button>
+              <Button size="small" variant="contained" style={{backgroundColor:"red",marginBottom:"1em"}} type='submit'> Login</Button>
           </form>
-          <p className='log-p'>{logmsg}</p>  
+            <p className='log-p'>{logmsg}</p>  
           </div>
     </div>
   )

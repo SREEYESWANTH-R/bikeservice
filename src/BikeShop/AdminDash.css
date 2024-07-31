@@ -7,7 +7,7 @@
 }
 
 .admin-dash-container {
-    display:grid;
+    display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 260px 1fr;
     grid-template-areas: 
@@ -25,13 +25,16 @@
     color: white;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-family: Montserrat ,sans-serif;
+    font-family: Montserrat, sans-serif;
     border-bottom: 1px solid white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .admin-header-profile {
     display: flex;
-    gap:5px;
+    gap: 5px;
     align-items: center;
 }
 
@@ -44,13 +47,17 @@
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     justify-content: space-between;
+    position: sticky;
+    top: 60px; 
+    height: calc(100vh - 79px); 
+    overflow-y: auto;
 }
 
 .admin-navigation ul {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    font-family: Roboto,Montserrat ,sans-serif;
+    font-family: Roboto, Montserrat, sans-serif;
 }
 
 .admin-navigation li {
@@ -71,9 +78,7 @@
 .admin-dash-content {
     grid-area: content;
     padding: 2em;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    overflow-y: auto;
 }
 
 .admin-dash-cards {
@@ -85,17 +90,68 @@
     flex: 1;
 }
 
-.admin-card-ele{
+.admin-card-ele {
     display: flex;
     justify-content: space-between;
-    font-family:Montserrat,sans-serif;
+    font-family: Montserrat, sans-serif;
 }
 
 .admin-dash-graphs {
     display: flex;
-    gap: 20px;
+    justify-content: space-evenly;
+    font-family: Montserrat, sans-serif;
+    margin-top: 2em;
 }
 
-.admin-graph-card {
-    flex: 1;
+/* .graphs{
+    font-family: Montserrat, sans-serif;
+} */
+
+.admin-service {
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.431);
+    border-radius: 5px;
+    padding: 1em 0;
+}
+
+.admin-service-add, .admin-service-delete {
+    text-align: center;
+    font-family: Montserrat, sans-serif;
+}
+
+.book-details{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.431);
+    margin-top: 1em;
+    padding: 1em;
+}
+
+.book-details h2{
+    text-align: center;
+    font-family: Montserrat, sans-serif;
+    margin-bottom: 1em;
+}
+
+.admin-card-box{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap:1em; 
+}
+
+.status-cont{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-card{
+    max-width: 500px;
+}
+
+.card-btn{
+    margin-top: 0.7em;
+    display: flex;
+    justify-content: flex-start;
+    gap:1em;
 }

@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.log-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.log{
+    background-color: rgba(212, 212, 212, 0.333);
+    width:70%;
+    height: 70%;
+    border-radius: 20px;
+    padding: 3em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.log-head{
+    text-align: center;
+    font-family: Montserrat ,sans-serif;
+    margin-bottom: 20px;
+}
+
+.bike-login-form{
+    text-align: center;
+}
+
+.log-p{
+    font-family: Montserrat ,sans-serif;
+    font-weight: 600;
+}
