@@ -1,70 +1,58 @@
-# Bike Service Application
+# Bike Service Management System
+#Overview
+This project is a Bike Service Management System designed to manage bike service bookings, user profiles, and administrative tasks. The system includes features for user signup, login, service bookings, and administrative dashboard for viewing booking statistics and user activities.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#Features
+#User Features
+#1.Signup and Login
+ ->Users can sign up and log in to their accounts.
+ ->Passwords are hashed using bcrypt for security.
+ ->JWT tokens are used for session management.
 
-## Available Scripts
+#2.Profile Management
+ ->Users can view their profile information.
+ ->Users can log out, which updates their active status in the database.
 
-In the project directory, you can run:
+#3.Service Booking
+  ->Users can book bike services by selecting from available services.
+  ->Booking details include user information, bike number, phone number, booking date, selected services, total cost, and booking status.
+  ->Users receive email notifications upon booking.
 
-### `npm start`
+#4.View Previous Services
+  ->Users can view their previous bookings, including detailed information about each booking and the services included.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#Admin Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#1.Admin Login
+  ->Admins can log in using their credentials to access the administrative dashboard.
 
-### `npm test`
+#2.Dashboard
+  ->The admin dashboard displays statistics, such as the total number of users and active users.
+  ->Admins can view all bookings along with detailed information about each booking.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#3.Service Management
+  ->Admins can add new services to the system.
+  ->Admins can delete services from the system.
+  
+#Database Structure
+  ->Bookings Table: Stores information about each booking, including user details, booking date, total cost, and status.
+  ->BookingServices Table: Stores information about the services associated with each booking, including service details and costs.
 
-### `npm run build`
+#Modules Used
+#Backend
+  ->Express.js: A web application framework for Node.js.
+  ->MySQL2: A MySQL client for Node.js, used for database operations.
+  ->Cors: A package to enable Cross-Origin Resource Sharing.
+  ->Multer: A middleware for handling multipart/form-data, used for file uploads.
+  ->Bcrypt: A library to help hash passwords.
+  ->Jsonwebtoken (JWT): A package to generate and verify JSON Web Tokens for authentication.
+  ->Nodemailer: A module to send emails from Node.js applications.
+  ->Dotenv: A module to load environment variables from a .env file.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#Frontend
+  ->React: A JavaScript library for building user interfaces.
+  ->@mui/material: A library for Material-UI components.
+  ->@mui/icons-material: A library for Material-UI icons.
+  ->ReCharts - a library for react graphs 
+  Axios: A promise-based HTTP client for the browser and Node.js.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
