@@ -78,4 +78,16 @@ CREATE TABLE BookingServices (
 
 SELECT * FROM  BookingServices ;
 
+CREATE TABLE CompletedBookings (
+    booking_id INT PRIMARY KEY,
+    user_name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    bike_num VARCHAR(50) NOT NULL,
+    phone_num VARCHAR(50) NOT NULL,
+    booking_date DATE NOT NULL,
+    status ENUM('pending', 'ready to deliver', 'completed') DEFAULT 'completed',
+    total_cost DECIMAL(10, 2) NOT NULL
+);
+SELECT * FROM CompletedBookings;
 

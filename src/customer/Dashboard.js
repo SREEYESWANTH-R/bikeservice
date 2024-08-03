@@ -92,8 +92,9 @@ function Dashboard(){
         <div className='dash-bookings'>
             <h2>Bookings</h2>
             <div className='dash-card-box'>
-            {bookings.length > 0 ? (
-              bookings.map((booking) => (
+            {bookings.length > 0 && bookings.some(booking => booking.status !== 'completed') ? (
+              bookings.filter(booking => booking.status !== 'completed')
+              .map((booking) => (
                 <Card key={booking.booking_id} className='dash-card'>
                   <CardContent className="dash-booking-details">
                     <div className='dash-status-cont'>
