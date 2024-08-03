@@ -106,12 +106,24 @@ function AdminDash(){
     }
 };
 
+const updateBookingStatus = async (bookingId, newStatus) => {
+  try {
+    const response = await axios.put("http://localhost:3000/booking/update-status", { booking_id: bookingId, status: newStatus });
+    if (response.status === 200) {
+      fetchBookings();
+    }
+  }catch (error) {
+    console.error("Error updating status", error);
+  }
+};
+
+
 const chartData = [
   { name: 'Users', Total: userCount, Active: activeUser },
 ];
 
 const bookStatus = [
-  {name:'Booking-status', Active : pendingBook,Completed:completeBook}
+  {name:'Booking-status', Active:pendingBook,   Completed:completeBook}
 ]
 
 
@@ -222,7 +234,7 @@ const bookStatus = [
         </div>
         <div className='admin-dash-graphs'>
          <div >
-          <Typography variant="h5" style={{marginBottom:'1em',fontFamily:" Montserrat",textAlign:'center'}}>Service Analytics</Typography>
+          <Typography variant="h5" style={{marginBottom:'1em',fontFamily:" Montserrat",textAlign:'center'   }}>Service Analytics</Typography>
           <ReBarChart width={600} height={480} data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
@@ -260,15 +272,17 @@ const bookStatus = [
                     </div>
                     <Typography variant="body1"><strong>User:</strong> {booking.user_name}</Typography>
                     <Typography variant="body1"><strong>Address:</strong> {booking.address}</Typography>
+                    
                     <Typography variant="body1"><strong>Bike Number:</strong> {booking.bike_num}</Typography>
                     <Typography variant="body1"><strong>Phone Number:</strong> {booking.phone_num}</Typography>
                     <Typography variant="body1"><strong>Date:</strong> {booking.booking_date}</Typography>
                     <Typography variant="body1"><strong>Total Cost:</strong> {booking.total_cost}</Typography>
                     <Typography variant="body1"><strong>Services:</strong> {booking.services}</Typography>
                     <Typography variant="body1"><strong>Service Total Cost:</strong> {booking.service_total_cost}</Typography>
+                    <Typography variant="body1"><strong>Email:</strong> {booking.email}</Typography>
                     <div className='card-btn'>
-                      <Button size="small" variant="contained" style={{backgroundColor:"red"}}>Ready-To-Go</Button>
-                      <Button size="small" variant="contained" style={{backgroundColor:"red"}}>Completed</Button>
+                      <Button size="small" variant="contained" style={{backgroundColor:"red"}} onClick={()=>updateBookingStatus(booking.booking_id,"ready to deliver")} >Ready</Button>
+                      <Button size="small" variant="contained" style={{backgroundColor:"red"}} onClick={()=>updateBookingStatus(booking.booking_id,"completed")} >Completed</Button>
                     </div>
                   </CardContent>
                 </Card>

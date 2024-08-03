@@ -15,6 +15,7 @@ function Booking(){
   const [services,setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [date,setDate] = useState('');
+  const [userEmail,setUserEmail] = useState('');
 
   const navigate = useNavigate();
 
@@ -62,12 +63,21 @@ function Booking(){
     const status = 'pending';
 
     axios.post("http://localhost:3000/bookings",{
-      userName,address,bikeNum,phoneNum,date,selectedServices,totalCost,status
+      userName,address,bikeNum,phoneNum,userEmail,date,selectedServices,totalCost,status
     })
     .then(response=>{
       console.log("Booking Successful",response.data);
+      setTimeout(()=>{
+        setAddress("");
+        setBikeNum("");
+        setPhoneNum("");
+        setDate("");
+        setSelectedServices("");
+        setUserEmail("");
+      },1000)
+      
       axios.post("http://localhost:3000/notify-admin",{
-        userName,address,bikeNum,phoneNum,date,selectedServices,totalCost
+        userName,address,bikeNum,phoneNum,userEmail,date,selectedServices,totalCost
       })
       .then(adminResponse=>{
         console.log('Admin notified:', adminResponse.data);
@@ -104,10 +114,12 @@ function Booking(){
             Book Service
           </li>
         </Link>
-        <li>
-          <Task style={{ marginRight: '8px' }} />
-          Previous Service
-        </li>
+        <Link  style={{color:"white"}} to='/dashboard/previous'>
+          <li>
+            <Task style={{ marginRight: '8px' }} />
+            Previous Service
+          </li>
+        </Link>
       </ul>
     </nav>
     <div className="book-content">
@@ -143,6 +155,16 @@ function Booking(){
             label="Phone Number"
             variant="outlined"
             onChange={e => { setPhoneNum(e.target.value); }}
+            style={{marginBottom:"1em"}}
+          />
+           <TextField
+            fullWidth
+            helperText=""
+            id="outlined-basic"
+            value={userEmail}
+            label="Email"
+            variant="outlined"
+            onChange={e => { setUserEmail(e.target.value); }}
             style={{marginBottom:"1em"}}
           />
            <FormControl fullWidth variant="outlined" margin="normal" style={{marginBottom:"1em",maxWidth:"100%"}}>

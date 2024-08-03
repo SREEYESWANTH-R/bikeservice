@@ -72,10 +72,25 @@
     overflow-y: auto;
 }
 
-.dash-content Button{
-    transition: all;
+.dash-bookings h2{
+    text-align: center;
+    font-family: Montserrat, sans-serif;
+    margin-bottom: 1em;
 }
 
-.dash-content Button:hover{
-    background-color: darkred;
+.dash-card-box{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap:1em; 
+}
+
+.dash-card{
+    max-width: "35%";
+}
+
+.dash-status-cont{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

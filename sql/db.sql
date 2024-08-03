@@ -9,10 +9,9 @@ CREATE TABLE signup (
     email VARCHAR(100) NOT NULL UNIQUE,
     address TEXT,
     password VARCHAR(255) NOT NULL,
+    active BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-ALTER TABLE signup ADD COLUMN active BOOLEAN DEFAULT FALSE;
 SELECT * FROM signup;
 
 CREATE TABLE session (
@@ -59,6 +58,7 @@ CREATE TABLE Bookings (
     address VARCHAR(255) NOT NULL,
     bike_num VARCHAR(50) NOT NULL,
     phone_num VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     booking_date DATE NOT NULL,
     status ENUM('pending', 'ready to deliver', 'completed') DEFAULT 'pending',
     total_cost DECIMAL(10, 2) NOT NULL

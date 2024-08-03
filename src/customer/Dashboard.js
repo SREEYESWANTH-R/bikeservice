@@ -38,9 +38,7 @@ function Dashboard(){
   const fetchBookings = async (username) => {
     try {
         const encodedUsername = encodeURIComponent(username);
-      
         const response = await axios.get(`http://localhost:3000/customer/bookings/${encodedUsername}`);
-       
         setBookings(response.data);
     } catch (error) {
         console.error('Error fetching customer bookings:', error);
@@ -79,10 +77,12 @@ function Dashboard(){
                     Book Service
                 </li>
             </Link>
-            <li>
-                <Task style={{marginRight:'8px'}}/>
-                Previous Service
-            </li>
+            <Link style={{color:"white"}} to="/dashboard/previous">
+              <li>
+                  <Task style={{marginRight:'8px'}}/>
+                  Previous Service
+              </li>
+            </Link>
         </ul>
         <div className='dash-logbtn'>
             <Button size="medium" onClick={handleLogout} variant="contained" style={{backgroundColor:"red", width:"10em"}}>Logout</Button>
@@ -91,14 +91,14 @@ function Dashboard(){
       <div className='dash-content'>
         <div className='dash-bookings'>
             <h2>Bookings</h2>
-            <div className='admin-card-box'>
+            <div className='dash-card-box'>
             {bookings.length > 0 ? (
               bookings.map((booking) => (
-                <Card key={booking.booking_id} className='admin-card'>
-                  <CardContent className="booking-details">
-                    <div className='status-cont'>
+                <Card key={booking.booking_id} className='dash-card'>
+                  <CardContent className="dash-booking-details">
+                    <div className='dash-status-cont'>
                       <Typography variant="h6">Booking ID: {booking.booking_id}</Typography>
-                      <Typography variant="body1"><strong>{booking.status}</strong></Typography>
+                      <Typography variant="body1"><strong style={{color:"green"}}>{booking.status}</strong></Typography>
                     </div>
                     <Typography variant="body1"><strong>User:</strong> {booking.user_name}</Typography>
                     <Typography variant="body1"><strong>Address:</strong> {booking.address}</Typography>
@@ -107,7 +107,7 @@ function Dashboard(){
                     <Typography variant="body1"><strong>Date:</strong> {booking.booking_date}</Typography>
                     <Typography variant="body1"><strong>Services:</strong> {booking.services}</Typography>
                     <Typography variant="body1"><strong>Total Cost:</strong> {booking.total_cost}</Typography>
-                    
+                    <Typography variant="body1"><strong>Total Cost:</strong> {booking.email}</Typography>
                   </CardContent>
                 </Card>
               ))

@@ -8,6 +8,7 @@ import Dashboard from './customer/Dashboard';
 import AdminLogin from './BikeShop/AdminLogin';
 import AdminDash from './BikeShop/AdminDash';
 import Booking from './customer/Booking';
+import PreviousBook from './customer/PreviousBook';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/login" element={<Login/>}/>
             <Route path="/dashboard" element={<Dashboard/>}/>
             <Route path="/dashboard/booking" element={<Booking/>}/>
+            <Route path="/dashboard/previous" element={<PreviousBook/>}/>
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/dashboard" element={<AdminDash/>}/>
           </Routes>

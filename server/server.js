@@ -16,7 +16,7 @@ const app = express();
 
 app.use(cors({
     origin:["http://localhost:3001"],
-    methods:['POST','GET','DELETE'],
+    methods:['POST','GET','DELETE','PUT'],
     credentials : true
 }));
 app.use(express.json());
@@ -39,22 +39,6 @@ db.connect((err)=>{
     }
     console.log("MySOL Connected..");
 })
-
-// Middleware to authenticate token and extract user info
-// const authenticateToken = (req, res, next) => {
-//     const authHeader = req.headers['authorization'];
-//     const token = authHeader && authHeader.split(' ')[1];
-  
-//     if (token == null) return res.sendStatus(401);
-  
-//     jwt.verify(token, 'your_jwt_secret', (err, user) => {
-//       if (err) return res.sendStatus(403);
-//       req.user = user;
-//       next();
-//     });
-//   };
-  
-
 
 //route for user signup
 app.post("/signup",async(req,res)=>{
@@ -129,6 +113,7 @@ app.get("/admin/dashboard",(req,res)=>{
     })
 })
 
+//route for logout 
 app.post('/logout',(req,res)=>{
     const {id} = req.body;
     const logoutSql = "UPDATE signup SET active = 0 WHERE id = ?";
@@ -184,14 +169,12 @@ app.delete('/services/delete', (req, res) => {
     });
 });
 
-
-
 //route for booking
 app.post("/bookings",(req,res)=>{
-    const { userName,address,bikeNum,phoneNum,date,selectedServices,totalCost,status} = req.body
+    const { userName,address,bikeNum,phoneNum,userEmail,date,selectedServices,totalCost,status} = req.body
 
-    const bookSql = "INSERT INTO Bookings (user_name, address,bike_num,phone_num,booking_date,total_cost, status) VALUES (?,?,?,?,?,?,?) "
-    db.query(bookSql,[userName,address,bikeNum,phoneNum,date,totalCost,status],(err,results)=>{
+    const bookSql = "INSERT INTO Bookings (user_name, address,bike_num,phone_num,booking_date,total_cost, status,email) VALUES (?,?,?,?,?,?,?,?) "
+    db.query(bookSql,[userName,address,bikeNum,phoneNum,date,totalCost,status,userEmail],(err,results)=>{
         if(err){
             console.error('Error inserting booking:',err);
             return res.status(500).send('Error creating booking');
@@ -228,7 +211,7 @@ app.post("/bookings",(req,res)=>{
 app.get("/bookings", (req, res) => {
     const bookSql = `
         SELECT 
-            B.booking_id, B.user_name, B.address, B.bike_num, B.phone_num, B.booking_date, B.total_cost, B.status,
+            B.booking_id, B.user_name, B.address, B.bike_num, B.phone_num, B.booking_date, B.total_cost, B.status,B.email,
             GROUP_CONCAT(S.service_name SEPARATOR ', ') AS services,
             SUM(BS.total_cost) AS service_total_cost
         FROM 
@@ -255,19 +238,17 @@ app.get("/bookings", (req, res) => {
 
 
 //route to count the booking active and completed details
-
 app.get('/booking/status',(req,res)=>{
     const sql = `
     SELECT
             (SELECT COUNT(*) FROM Bookings WHERE status = 'pending') AS pendingBooking,
-            (SELECT COUNT(*) FROM Bookings WHERE status = 'completed') AS CompleteBook
+            (SELECT COUNT(*) FROM Bookings WHERE status = 'completed') AS completeBooking
     `
 
     db.query(sql,(err,countres)=>{
         if(err) {res.status(404).json("Error sending count");}
         else{
-           
-            res.status(200).json({message:"Count Sent Successfully",pendingBook:countres[0].pendingBooking,comBooking:countres[0].completeBooking});
+        res.status(200).json({message:"Count Sent Successfully",pendingBook:countres[0].pendingBooking,comBooking:countres[0].completeBooking});
         }
     })
 });
@@ -286,6 +267,7 @@ app.get('/customer/bookings/:username', (req, res) => {
             B.booking_date, 
             B.total_cost, 
             B.status,
+            B.email,
             GROUP_CONCAT(BS.service_name SEPARATOR ', ') AS services,
             SUM(BS.total_cost) AS service_total_cost
         FROM 
@@ -306,14 +288,123 @@ app.get('/customer/bookings/:username', (req, res) => {
             res.status(500).send('Error fetching bookings');
         }
         if (results.length === 0) {
+           
              res.status(404).send(`No bookings found for username: ${username}`);
         }
+        
         res.json(results);
     });
 });
 
 
+// Route for updating status and notifying user
+app.put('/booking/update-status', async (req, res) => {
+    const { booking_id, status } = req.body;
+    
+    if (!booking_id || !status) {
+        return res.status(400).json({ error: 'Booking ID and status are required' });
+    }
+  
+    const validStatuses = ['pending', 'ready to deliver', 'completed'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+    }
 
+    try {
+        // Update Booking Status
+        const updateQuery = 'UPDATE Bookings SET status = ? WHERE booking_id = ?';
+        const [updateResult] = await db.promise().query(updateQuery, [status, booking_id]);
+
+        if (updateResult.affectedRows === 0) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        // Fetch Booking Details
+        const bookingQuery = 'SELECT * FROM Bookings WHERE booking_id = ?';
+        const [bookingResult] = await db.promise().query(bookingQuery, [booking_id]);
+
+        if (bookingResult.length === 0) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        const bookingDetails = bookingResult[0];
+
+        if (status === 'completed') {
+            // Insert into CompletedBookings
+            const insertQuery = `
+                INSERT INTO CompletedBookings (
+                    booking_id, user_name, address, email, bike_num, phone_num, booking_date, total_cost, status
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+            await db.promise().query(insertQuery, [
+                bookingDetails.booking_id,
+                bookingDetails.user_name,
+                bookingDetails.address,
+                bookingDetails.email,
+                bookingDetails.bike_num,
+                bookingDetails.phone_num,
+                bookingDetails.booking_date,
+                bookingDetails.total_cost,
+                bookingDetails.status
+            ]);
+
+            // Send Email
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'solovelingrise24@gmail.com', // your email
+                    pass: 'zmau zwyb tiqf qsnx' // your app password
+                }
+            });
+
+            const mailOptions = {
+                from: 'solovelingrise24@gmail.com',
+                to: bookingDetails.email,
+                subject: 'Your Booking is Completed',
+                text: `Dear User,
+
+Your booking with ID ${booking_id} has been completed.
+
+Thank you for using our service.
+
+Best Regards,
+Bike Service Team`
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                    return res.status(500).send('Error sending email notification');
+                }
+                res.status(200).json({ message: 'Booking status updated, inserted into CompletedBookings, and notification sent' });
+            });
+        } else {
+            res.status(200).json({ message: 'Booking status updated' });
+        }
+    } catch (err) {
+        console.error('Internal Server Error:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+//route to get the completed services from the CompleteBookings table
+
+app.get("/completed/:username",(req,res)=>{
+
+    const username = req.params.username;
+    const query = "SELECT * FROM CompletedBookings WHERE user_name = ? AND status = 'completed'";
+    db.query(query,[username],(err,result)=>{
+        if(err){
+            res.status(500).json("Error Fetching Completed Booking details");
+        }else{
+           res.status(200).json({message:"successfull",result});
+            
+        }
+    });
+});
+  
 
 //route for notifying admin
 app.post('/notify-admin',(req,res)=>{
