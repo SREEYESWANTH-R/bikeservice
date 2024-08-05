@@ -17,11 +17,12 @@ export default function Landing(){
 
   return (
     <div className='land-container'>
-        <header className='land-header'>
+    {/* Navigation*/}
+        <header className='land-header'>  
             <h1 className='land-h1'><span style={{color:"red"}}>GEAR</span> Up</h1>
             <ul className='land-ul'>
                 <li className='land-li'>Home</li>
-                <li className='land-li'>About Us</li>
+                <li className='land-li'>About Us</li>  
                 <li className='land-li'>Services</li>
                 <li className='land-li'>Contact Us</li>
             </ul>
@@ -104,6 +105,7 @@ export default function Landing(){
                 <Instagram/>
               </a>
           </div>
+          {/* footer section */}
           <div className='footer-contact'>
             <p>Email: info@gearupbikeservice.com</p>
             <p>Phone: (123) 456-5432</p>

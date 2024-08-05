@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './SignIn.css'
 
 function SignIn(){
+    //states to store the values 
     const[regname,setRegName] = useState("");
     const[reggender,setRegGender] = useState("");
     const[regmobile,setRegMobile] = useState("");
@@ -16,20 +17,21 @@ function SignIn(){
      
     const navigate = useNavigate()
 
+    //function to send data to backend route to store in database
     async function handleRegSubmit(e){
         e.preventDefault();
         if(regnewpass === regcmpass){
             const userData = {
                 name:regname,
                 gender:reggender,
-                mobile:regmobile,
+                mobile:regmobile,      //datas being passed
                 email:regemail,
                 address:regadd,
                 password:regnewpass,
                 active:true
             };
             try{
-                const response = await axios.post("http://localhost:3000/signup",userData);
+                const response = await axios.post("http://localhost:3000/signup",userData);  //backend route where data is sent
                 if(response.status === 200){
                     setMessage("User registration Successful");
                     setTimeout(()=>{
