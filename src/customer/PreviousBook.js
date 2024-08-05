@@ -7,18 +7,19 @@ import axios from 'axios'
 import './PreviousBook.css'
 
 function PreviousBook(){
-
+  //states to store values
   const [userName,setUserName] = useState("");
   const [completedBook, setCompletedBooking] = useState([]);
+  //navigate to navigate b/w routes
   const navigate = useNavigate();
 
   useEffect(()=>{
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token"); //accessing token from localStorage for authentication
     if(!token){
       navigate("/login");
     }else{
       try{
-        const decodeToken = jwtDecode(token);
+        const decodeToken = jwtDecode(token); //decoding token
         setUserName(decodeToken.name)
         fetchCompletedBooking(decodeToken.name)
       }catch(error){
@@ -29,14 +30,13 @@ function PreviousBook(){
     }
   },[navigate])
 
- const fetchCompletedBooking = async(username) =>{
+ const fetchCompletedBooking = async(username) =>{     //function to fetch booking that is completed and display it in the component
   try{
-    
     const encodedUsername = encodeURIComponent(username);
-    const response = await axios.get(`http://localhost:3000/completed/${encodedUsername}`);
-    setCompletedBooking(response.data.result);
+    const response = await axios.get(`http://localhost:3000/completed/${encodedUsername}`); //backend route to get the data 
+    setCompletedBooking(response.data.result); //storing result in the state
   }catch(error){
-    console.log("Error Fectching completed data",error);
+    console.log("Error Fectching completed data",error);  // Error handling
   }
  }
 
@@ -76,7 +76,7 @@ function PreviousBook(){
         <div className='previous-book'>
             <h2>Completed Booking</h2>
             <div className='previous-book-box'>
-              {completedBook.length > 0 ? (
+              {completedBook.length > 0 ? (      //mapping the data to individual card components
                 completedBook.map((bookings) => (
                   <Card key={bookings.booking_id} className='previous-card'>
                     <CardContent className="dash-booking-details">
@@ -84,9 +84,10 @@ function PreviousBook(){
                         <Typography variant="h6">Booking ID: {bookings.booking_id}</Typography>
                         <Typography variant="body1"><strong style={{ color: "green" }}>{bookings.status}</strong></Typography>
                       </div>
+                      {/* mapped value */}
                       <Typography variant="body1"><strong>User:</strong> {bookings.user_name}</Typography>
                       <Typography variant="body1"><strong>Address:</strong> {bookings.address}</Typography>
-                      <Typography variant="body1"><strong>Bike Number:</strong> {bookings.bike_num}</Typography>
+                      <Typography variant="body1"><strong>Bike Number:</strong> {bookings.bike_num}</Typography>       
                       <Typography variant="body1"><strong>Phone Number:</strong> {bookings.phone_num}</Typography>
                       <Typography variant="body1"><strong>Date:</strong> {bookings.booking_date}</Typography>
                       <Typography variant="body1"><strong>Services:</strong> {bookings.services}</Typography>
