@@ -45,7 +45,7 @@ function Dashboard(){
         const response = await axios.get(`http://localhost:3000/customer/bookings/${encodedUsername}`); //backend route to get the booking details 
         setBookings(response.data);
     } catch (error) {
-        console.error('Error fetching customer bookings:', error);
+        console.error('Error fetching customer bookings:', error); // console logging error if data is not fetched
     }
 };
 
