@@ -1,0 +1,19 @@
+SignUp.js
+
+Name         :  Your Name
+Gender       :  Your Gender
+Mobile       :  Your Number
+Email        :  Your Email
+Address      :  Coimbatore,India
+New Pass     :  User@123
+Confirm Pass :  User@123
+
+
+
+AdminDash.js 
+
+Add Service 
+Water Wash
+
+Delete Service
+Water Wash
