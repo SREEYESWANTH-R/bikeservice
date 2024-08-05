@@ -1,21 +1,20 @@
 import React,{useState} from 'react'
 import './Login.css'
-import {TextField,Button} from "@mui/material"
-import axios from 'axios'
+import {TextField,Button} from "@mui/material" //import mui materials
+import axios from 'axios' //import axios
 import { useNavigate } from 'react-router-dom';
 
-
-
-
 function Login(){
-
+  //states to store variable  
   const[identifer,setIdentifer] = useState("")
   const[logpass,setLogPass] = useState("");
   const[logmsg,setLogMsg] = useState("");
-   
+  
+  // use navigate to navigate b/w pages
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
 
+  //function to handle authenticated user 
   async function handleLogin(e){
    e.preventDefault();
    try{

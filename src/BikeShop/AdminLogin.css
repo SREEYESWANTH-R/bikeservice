@@ -1,0 +1,41 @@
+*{
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+
+.admin-log-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.admin-log{
+    background-color: rgba(212, 212, 212, 0.333);
+    width:70%;
+    height: 70%;
+    border-radius: 20px;
+    padding: 3em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-log p{
+    font-family: Montserrat ,sans-serif;
+    font-weight: 600;
+}
+
+.admin-log-head{
+    text-align: center;
+    font-family: Montserrat ,sans-serif;
+    margin-bottom: 20px;
+}
+
+.admin-login-form{
+    text-align: center;
+}
