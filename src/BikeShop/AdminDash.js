@@ -9,6 +9,7 @@ import axios from 'axios'
 
 function AdminDash(){
 
+  //state to store the values
   const[adminName,setAdminName] = useState("");
   const[userCount,setUserCount] = useState(0);
   const[activeUser,setActiveUser] = useState(0);
@@ -17,7 +18,7 @@ function AdminDash(){
   const [serviceMsg,setServiceMsg] = useState("");
   const [serviceDelMsg,setServiceDelMsg] = useState("");
   const [deleteService, setDeleteService] = useState("");
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState([]);    //state to store the booking data 
   const [pendingBook, setPendingBook] = useState("");
   const [completeBook,setCompleteBook] = useState("");
 
@@ -26,48 +27,49 @@ function AdminDash(){
 
   const fetchUserData = async ()=>{
     try{
-      const response  = await axios.get("http://localhost:3000/admin/dashboard");
-      setUserCount(response.data.totalUsers)
-      setActiveUser(response.data.activeUser);
+      const response  = await axios.get("http://localhost:3000/admin/dashboard");  //route to get the count of user who are active and total users
+      setUserCount(response.data.totalUsers) //state to store total user
+      setActiveUser(response.data.activeUser); //state to store active user
      
     }catch(error){
-      console.error("Error fetching total users:", error);
+      console.error("Error fetching total users:", error); //console log if error
     }
   }
 
   const fetchBookingStatus = async() =>{
     try{
-      const countRes = await axios.get("http://localhost:3000/booking/status");
-      setPendingBook(countRes.data.pendingBook);
-      setCompleteBook(countRes.data.comBooking)
+      const countRes = await axios.get("http://localhost:3000/booking/status"); //route to get the count of booking that are completed and pending from Bookings table
+      setPendingBook(countRes.data.pendingBook); //state to store pending Booking
+      setCompleteBook(countRes.data.comBooking) //state to store Complete Booking
     }catch(error){
       console.error("Error Fetching Status",error)
     }
   }
 
+  // Fetch all bookings
   const fetchBookings = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/bookings");
+      const response = await axios.get("http://localhost:3000/bookings"); //backend route to get the booking details from the Bookings table 
       setBookings(response.data);
     } catch (error) {
-      console.error("Error fetching bookings:", error);
-    }
+      console.error("Error fetching bookings:", error); // console log if error
+       }
   };
 
-
+  // Handle initial data fetching and authentication
   useEffect(()=>{
     const logged = localStorage.getItem("adminLogged");
     if(!logged){
       navigate('/admin/login');
     }else{
-      const Adname = localStorage.getItem("adminID");
+      const Adname = localStorage.getItem("adminID");   //useEffect to handle the Function calls and handling the admin 
       setAdminName(Adname);
       fetchUserData();
       fetchBookings();
       fetchBookingStatus()
   }},[navigate]);
 
-  
+   // Handle adding a new service
   const handleNewServices = async(event) =>{
     event.preventDefault();
     try{
@@ -86,6 +88,7 @@ function AdminDash(){
     }  
   }
 
+  // Handle deleting a service
   const handleDeleteServices = async (e) => {
     e.preventDefault();
     try {
@@ -106,6 +109,7 @@ function AdminDash(){
     }
 };
 
+// Update booking status
 const updateBookingStatus = async (bookingId, newStatus) => {
   try {
     const response = await axios.put("http://localhost:3000/booking/update-status", { booking_id: bookingId, status: newStatus });
@@ -126,7 +130,7 @@ const bookStatus = [
   {name:'Booking-status', Active:pendingBook,   Completed:completeBook}
 ]
 
-
+//Handle Admin logout
   const handleAdminLogOut = () =>{
       localStorage.removeItem("adminlogged");
       navigate("/admin/login")
