@@ -11,14 +11,20 @@ EXECUTION PART
  
  3.Node Modules Installation
    npm install
- 
+ 4.Data Base SetUp
+   4.1 - Open MySQl Workbench and create a new connection
+   4.2 - Change the host name to localhost
+   4.3 - Set Your user name
+   4.4 - Set Your password
+   4.5 - Set the databasename 
+   
  4.Open Two Terminal side by side 
   Execute in first terminal
    -> npm run back
   Execute in second terminal
    -> npm run start
 
-5.Enter sample Data from sampleData.txt
+6.Enter sample Data from sampleData.txt
      
 Features
  User Features
