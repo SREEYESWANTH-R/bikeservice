@@ -7,7 +7,7 @@ import axios from 'axios'
 import "./Booking.css"
 
 function Booking(){
-  
+  //states to store values
   const [userName,setUserName] = useState("");
   const [address,setAddress] = useState("");
   const [bikeNum, setBikeNum] = useState();
@@ -19,7 +19,7 @@ function Booking(){
 
   const navigate = useNavigate();
 
-
+  //useEffect to get services 
   useEffect(()=>{
     const token = localStorage.getItem("token");
     if (!token) {
@@ -29,9 +29,9 @@ function Booking(){
           const decodeToken = jwtDecode(token);
           setUserName(decodeToken.name);
           
-          axios.get("http://localhost:3000/services")
+          axios.get("http://localhost:3000/services") //route to get the services from the backend route 
           .then((response)=>{
-            setServices(response.data)
+            setServices(response.data) //response is stored in states
             console.log(services);
           })
           .catch(error =>{
@@ -39,7 +39,7 @@ function Booking(){
           });
       }catch(error){
           console.error("JWT Decode Error:", error);
-          localStorage.removeItem("token");
+          localStorage.removeItem("token"); // error handling
           navigate("/login");
       }
     }
@@ -53,7 +53,7 @@ function Booking(){
   const handleBooking = () =>{
     
     const totalCost = selectedServices.reduce((acc, serviceName) => {
-      const service = services.find(s => s.service_name === serviceName);
+      const service = services.find(s => s.service_name === serviceName); //function to get the tax rate and service cost and calculating total cost
       if (service) {
           return acc + service.service_rate * (1 + service.tax_rate / 100);
       }
@@ -62,30 +62,21 @@ function Booking(){
 
     const status = 'pending';
 
-    axios.post("http://localhost:3000/bookings",{
+    axios.post("http://localhost:3000/bookings",{ //route to post the values to the route and store it in database
       userName,address,bikeNum,phoneNum,userEmail,date,selectedServices,totalCost,status
     })
     .then(response=>{
       console.log("Booking Successful",response.data);
-      setTimeout(()=>{
-        setAddress("");
-        setBikeNum("");
-        setPhoneNum("");
-        setDate("");
-        setSelectedServices("");
-        setUserEmail("");
-      },1000)
-      
-      axios.post("http://localhost:3000/notify-admin",{
-        userName,address,bikeNum,phoneNum,userEmail,date,selectedServices,totalCost
+      axios.post("http://localhost:3000/notify-admin",{ //backend route to send email 
+        userName,address,bikeNum,phoneNum,userEmail,date,selectedServices,totalCost  //values thet is being sent
       })
       .then(adminResponse=>{
-        console.log('Admin notified:', adminResponse.data);
+        console.log('Admin notified:', adminResponse.data);  //console logging to check the the route is working
       }).catch(adminError =>{
-          console.error("Error notifying admin",adminError);
+          console.error("Error notifying admin",adminError); //console logging error if email is not sent
       })
     }).catch(error=>{
-      console.error("Error creatring booking",error);
+      console.error("Error creatring booking",error); //error handling
     })
 
   }

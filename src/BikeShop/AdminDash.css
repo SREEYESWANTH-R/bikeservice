@@ -103,10 +103,6 @@
     margin-top: 2em;
 }
 
-/* .graphs{
-    font-family: Montserrat, sans-serif;
-} */
-
 .admin-service {
     display: flex;
     justify-content: space-around;
@@ -134,9 +130,14 @@
 
 .admin-card-box{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap:1em; 
+    gap:16px; 
+}
+
+.admin-card{
+    flex: 1 1 calc(25% - 16px);
+    box-sizing: border-box;
 }
 
 .status-cont{
@@ -149,9 +150,16 @@
     max-width: 500px;
 }
 
-.card-btn{
-    margin-top: 0.7em;
+.booking-details {
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    gap: 8px; 
+  }
+  
+
+.card-btn{
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
     gap:1em;
 }
