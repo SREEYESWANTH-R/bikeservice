@@ -1,24 +1,23 @@
 const express = require("express");
 const mysql2 = require("mysql2");
 const cors = require("cors");
-const multer  = require("multer");
-const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
-const dotenv = require("dotenv");
-const { count } = require("console");
 
-dotenv.config();
 
-//app setup
+
+// Initialize Express app
 const app = express();
 
+// Initialize Express app
 app.use(cors({
     origin:["http://localhost:3001"],
     methods:['POST','GET','DELETE','PUT'],
     credentials : true
 }));
+
+// Middleware to parse JSON
 app.use(express.json());
 const port = 3000
 
@@ -98,6 +97,7 @@ app.post("/admin/login",(req,res)=>{
     });
 });
 
+// Route to get user count and active user count
 app.get("/admin/dashboard",(req,res)=>{
     const sql = `
         SELECT
@@ -113,7 +113,7 @@ app.get("/admin/dashboard",(req,res)=>{
     })
 })
 
-//route for logout 
+// Route for user logout
 app.post('/logout',(req,res)=>{
     const {id} = req.body;
     const logoutSql = "UPDATE signup SET active = 0 WHERE id = ?";
@@ -123,7 +123,7 @@ app.post('/logout',(req,res)=>{
     })
 })
 
-//route to get data from the Services table
+// Route to get data from the Services table
 app.get("/services",(req,res)=>{
     const sql = "SELECT * FROM Services";
     db.query(sql,(err,result)=>{
@@ -142,6 +142,7 @@ app.post('/services/add',(req,res)=>{
     });
 });
 
+//Route to delete services
 app.delete('/services/delete', (req, res) => {
     const { serviceName} = req.body;
 
@@ -253,6 +254,22 @@ app.get('/booking/status',(req,res)=>{
     })
 });
 
+//route for getting the for dashboard
+app.get('/dashoard/:username/booking-count',async(req,res)=>{
+   const username = req.params.username;
+
+   try{
+    const Completequery = 'SELECT COUNT(*) AS CompleteCount FROM Bookings WHERE user_name = ? AND status = "completed"';
+    const[completeResult] = await db.promise().query(Completequery,username);
+    const CompleteCount = completeResult[0].CompleteCount;
+    res.status(200).json({
+        CompleteCount:CompleteCount
+        
+    });
+   }catch(error){
+        console.error("Error fetching Count",error);
+   }
+})
 
 //route get the details of booking of the user 
 app.get('/customer/bookings/:username', (req, res) => {
@@ -349,44 +366,47 @@ app.put('/booking/update-status', async (req, res) => {
                 bookingDetails.status
             ]);
 
+           const userEmail = bookingDetails.email
+
             // Send Email
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'solovelingrise24@gmail.com', // your email
-                    pass: 'zmau zwyb tiqf qsnx' // your app password
+                    user: 'sololevelingrise24@gmail.com', // your email
+                    pass: 'uxef qxpw egoo vcdd' // your app password
                 }
             });
 
             const mailOptions = {
                 from: 'solovelingrise24@gmail.com',
-                to: bookingDetails.email,
+                to: userEmail,
                 subject: 'Your Booking is Completed',
                 text: `Dear User,
 
-Your booking with ID ${booking_id} has been completed.
+                Your booking with ID ${booking_id} has been completed.
 
-Thank you for using our service.
+                Thank you for using our service.
 
-Best Regards,
-Bike Service Team`
-            };
+                Best Regards,
+                Bike Service Team`
+                            };
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.error('Error sending email:', error);
                     return res.status(500).send('Error sending email notification');
                 }
-                res.status(200).json({ message: 'Booking status updated, inserted into CompletedBookings, and notification sent' });
+                return res.status(200).json({ message: 'Booking status updated, inserted into CompletedBookings, and notification sent' });
             });
         } else {
-            res.status(200).json({ message: 'Booking status updated' });
+            return res.status(200).json({ message: 'Booking status updated' });
         }
     } catch (err) {
         console.error('Internal Server Error:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 
 //route to get the completed services from the CompleteBookings table
@@ -414,13 +434,13 @@ app.post('/notify-admin',(req,res)=>{
     const transporter = nodemailer.createTransport({
         service:'gmail',
         auth:{
-            user:'sreeyeswanthr@gmail.com', //your mail
-            pass:'tqpb lden jcwh uigf' //your 2 step verification -> app password
+            user:'gearup348@gmail.com', //your mail
+            pass:'rdlw oyzb cygb vqqr' //your 2 step verification -> app password
         }
     });
      // Email options
     const mailOptions = {
-    from: 'sreeyeswanthr@gmail.com',
+    from: 'gearup348@gmail.com',
     to: 'sololevelingrise24@gmail.com',
     subject: 'New Booking Received',
     text: `New booking details:

@@ -1,6 +1,10 @@
+-- creating database
 create database bikeInfo;
+
+-- use data base
 use bikeInfo;
 
+-- creating table signup
 CREATE TABLE signup (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -14,12 +18,7 @@ CREATE TABLE signup (
 );
 SELECT * FROM signup;
 
-CREATE TABLE session (
-	id INT auto_increment primary key,
-	name VARCHAR(100) NOT NULL
-);
-SELECT * FROM session;
-
+-- creating table admin
 CREATE TABLE admin (
     id INT AUTO_INCREMENT PRIMARY KEY,
     adminId VARCHAR(50) NOT NULL UNIQUE,
@@ -28,7 +27,7 @@ CREATE TABLE admin (
 INSERT INTO admin (adminId, password)
 VALUES ('AD01', '123@AD');
 
-
+-- creating table Services
 CREATE TABLE Services (
     service_id INT AUTO_INCREMENT PRIMARY KEY,
     service_name VARCHAR(255) NOT NULL,
@@ -36,6 +35,7 @@ CREATE TABLE Services (
     tax_rate DECIMAL(4, 2) DEFAULT 5.00
 );
 
+-- creating a view to calculte the total cost
 CREATE VIEW ServicesWithTotalCost AS
 SELECT 
     service_id,
@@ -45,13 +45,14 @@ SELECT
     (service_rate + (service_rate * tax_rate / 100)) AS total_cost
 FROM Services;
 
-INSERT INTO Services (service_name, service_rate)
-VALUES 
-('Engine Service', 100.00),
-('Water Wash', 50.00),
-('Brake Service', 80.00);
+-- INSERT INTO Services (service_name, service_rate)
+-- VALUES 
+-- ('Engine Service', 100.00),
+-- ('Water Wash', 50.00),
+-- ('Brake Service', 80.00);
 SELECT * FROM ServicesWithTotalCost;
 
+-- creating table Bookings
 CREATE TABLE Bookings (
     booking_id INT AUTO_INCREMENT PRIMARY KEY,
     user_name VARCHAR(255) NOT NULL,
@@ -65,6 +66,7 @@ CREATE TABLE Bookings (
 );
 SELECT * FROM Bookings;
 
+-- creating table BookingServices
 CREATE TABLE BookingServices (
     booking_id INT,
     service_id INT,
@@ -78,6 +80,7 @@ CREATE TABLE BookingServices (
 
 SELECT * FROM  BookingServices ;
 
+-- creating table CompletedBookings
 CREATE TABLE CompletedBookings (
     booking_id INT PRIMARY KEY,
     user_name VARCHAR(255) NOT NULL,
