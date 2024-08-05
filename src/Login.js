@@ -18,12 +18,12 @@ function Login(){
   async function handleLogin(e){
    e.preventDefault();
    try{
-    const response = await axios.post("http://localhost:3000/login",{identifer,logpass});
+    const response = await axios.post("http://localhost:3000/login",{identifer,logpass});  //sending data to the backend route 
     if(response.status === 200){
         const {token,name,userId} = response.data
         setLogMsg("Login in Successfully");
         localStorage.setItem("token",token);
-        localStorage.setItem("name",name);
+        localStorage.setItem("name",name);       //setting name,userId in localStorage
         localStorage.setItem("userId",userId);
         navigate("/dashboard")
         
