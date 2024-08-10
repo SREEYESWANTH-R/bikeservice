@@ -7,7 +7,9 @@ EXECUTION PART
  1. Open New Folder In VSCode
  
  2. Clone Git Repo
+    ```
     git clone https://github.com/SREEYESWANTH-R/bikeservice.git
+    ```
  
  3.Node Modules Installation
    npm install
